@@ -4,11 +4,11 @@ const fs = require('fs')
 const mime = require('mime')
 const multer = require('multer')
 
-const aws = require('aws-sdk')
-const S3_BUCKET = process.env.S3_BUCKET
-aws.config.region = process.env.AWS_REGION
+// const aws = require('aws-sdk')
+// const S3_BUCKET = process.env.S3_BUCKET
+// aws.config.region = process.env.AWS_REGION
 
-const s3 = new aws.S3()
+// const s3 = new aws.S3()
 // -----
 
 var Project = require('../models/project')
@@ -227,31 +227,35 @@ exports.project_image_get = function(req, res) {
 	// res.send('NOT IMPLEMENTED: Enquiry detail: ' + req.params.id);
 }
 
+// exports.project_sign_s3_put_get = (req, res) => {
+// 	const fileName = req.query.fileName
+// 	const fileType = req.query.fileType
+
+// 	const s3Params = {
+// 		Bucket: S3_BUCKET,
+// 		Key: fileName,
+// 		Expires: 60,
+// 		ContentType: fileType,
+// 		ACL: 'public-read'
+// 	}
+
+// 	s3.getSignedUrl('putObject', s3Params, (err, data) => {
+// 		if (err) {
+// 			console.error(err)
+// 			return res.status(500).send(err)
+// 		}
+// 		const returnData = {
+// 			signedRequest: data,
+// 			url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+// 		}
+// 		res.send(JSON.stringify(returnData))
+// 	})
+// }
 exports.project_sign_s3_put_get = (req, res) => {
-	const fileName = req.query.fileName
-	const fileType = req.query.fileType
-
-	const s3Params = {
-		Bucket: S3_BUCKET,
-		Key: fileName,
-		Expires: 60,
-		ContentType: fileType,
-		ACL: 'public-read'
-	}
-
-	s3.getSignedUrl('putObject', s3Params, (err, data) => {
-		if (err) {
-			console.error(err)
-			return res.status(500).send(err)
-		}
-		const returnData = {
-			signedRequest: data,
-			url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-		}
-		res.send(JSON.stringify(returnData))
+	return res.send({
+		message: 'S3 signed uploads disabled'
 	})
 }
-
 exports.project_s3_delete_get = (req, res) => {
 	const filenameToRemove = req.query.fileName
 

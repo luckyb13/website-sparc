@@ -1,8 +1,14 @@
 var Enquiry = require('../models/enquiry')
 var Product = require('../models/product')
 
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+// const sgMail = require('@sendgrid/mail')
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+function sendDummyEmail(email) {
+	console.log('Dummy email sender called')
+	console.log(email)
+	return Promise.resolve(true)
+}
 
 // Display list of all Enquirys.
 exports.enquiry_list = function(req, res) {
@@ -96,7 +102,8 @@ exports.enquiry_create_post = function(req, res) {
                         <br>Phone: ${enquiry.phone} </p>`
         }
 
-        sgMail.send(email).catch(console.error)
+        // sgMail.send(email).catch(console.error)
+		sendDummyEmail(email).catch(console.error)
 
 		enquiry.save(function(err) {
 			if (err) {
@@ -135,7 +142,8 @@ exports.enquiry_contact_create_post = function(req, res) {
                     <br>Phone: ${enquiry.phone} </p>`
     }
 
-    sgMail.send(email).catch(console.error)
+    // sgMail.send(email).catch(console.error)
+	sendDummyEmail(email).catch(console.error)
 	//res.send('NOT IMPLEMENTED: Enquiry create POST');
 
 	enquiry.save(function(err) {
