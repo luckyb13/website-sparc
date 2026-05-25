@@ -20,7 +20,10 @@ html
                             .card.z-depth-2.hoverable
                                 .card-image
                                     //- img(src=product.images, alt='product image')
-                                    img.materialboxed(src='/product/image/'+product.id, alt='product image')
+                                    img.materialboxed(
+                                        src=(product.images && product.images.length ? product.images[0] : '/images/blank.png'),
+                                        alt='product image'
+                                    )
                                     span.card-title #{product.name}
 
                                 .card-content

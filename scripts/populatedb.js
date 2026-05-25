@@ -4,9 +4,16 @@ console.log('This script populates some test projects, products, productCategory
 
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
-if (!userArgs[0].startsWith('mongodb://')) {
+
+if (
+    userArgs.length < 1 ||
+    (
+        !userArgs[0].startsWith('mongodb://') &&
+        !userArgs[0].startsWith('mongodb+srv://')
+    )
+) {
     console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
-    return
+    return;
 }
 
 var async = require('async')
@@ -29,12 +36,13 @@ var productCategories = []
 var projects = []
 var enquiries = []
 
-function productCreate(name, description, cost, status, categories, cb) {
-    productdetail = {
+function productCreate(name, description, cost, status, images, categories, cb) {
+    var productdetail = {
         name: name,
         description: description,
         cost: cost,
         status: status,
+        images: images,
         categories: categories
     }
 
@@ -68,14 +76,15 @@ function productCategoryCreate(name, cb) {
     });
 }
 
-function projectCreate(name, owner, description, date, cost, url, categories, cb) {
-    projectdetail = {
+function projectCreate(name, owner, description, date, cost, projectUrl, images, categories, cb) {
+    var projectdetail = {
         name: name,
         owner: owner,
         description: description,
         date: date,
         cost: cost,
-        url: url,
+        projectUrl: projectUrl,
+        images: images,
         categories: categories
     }
 
@@ -134,48 +143,131 @@ function createProductCategory(cb) {
 function createProduct(cb) {
     async.parallel([
         function (callback) {
-                productCreate("woodlamp", "wooden lamp description", 300, true, [productCategories[2], productCategories[1],], callback);
+            productCreate(
+                "woodlamp",
+                "wooden lamp description",
+                300,
+                true,
+                ["/catalog/product/5b166d03ea046d066fb2d57c.jpeg"],
+                [productCategories[2], productCategories[1]],
+                callback
+            );
         },
-        function (callback) {
-                productCreate("woodchair", "wooden chair description", 300, true, [productCategories[2], productCategories[0],], callback);
 
-        },
         function (callback) {
-                productCreate("lamp", "lamp description", 300, true, [productCategories[1], ], callback);
-
+            productCreate(
+                "woodchair",
+                "wooden chair description",
+                300,
+                true,
+                ["/catalog/product/5afc24f9f7eae61bffc3cf7d.jpeg"],
+                [productCategories[2], productCategories[0]],
+                callback
+            );
         },
+
         function (callback) {
-                productCreate("chair", "chair description", 300, true, [productCategories[0], ], callback);
-
+            productCreate(
+                "lamp",
+                "lamp description",
+                300,
+                true,
+                ["/catalog/product/5b1687cd7663d031ab5868bb.jpeg"],
+                [productCategories[1]],
+                callback
+            );
         },
-        ],
-        // optional callback
-        cb);
+
+        function (callback) {
+            productCreate(
+                "chair",
+                "chair description",
+                300,
+                true,
+                ["/catalog/product/5afc24f9f7eae61bffc3cf80.jpeg"],
+                [productCategories[0]],
+                callback
+            );
+        },
+    ],
+    cb);
 }
 
 
 function createprojects(cb) {
     async.parallel([
         function (callback) {
-                projectCreate("project 1", "owner 1", "description for 1", "1998-07-27", 234000, "http://google.com", ["commercial", "office"], callback);
+            projectCreate(
+                "project 1",
+                "owner 1",
+                "description for 1",
+                "1998-07-27",
+                234000,
+                "http://google.com",
+                ["/catalog/project/5b1a2c8643c4c425f468444e.jpeg"],
+                ["commercial", "office"],
+                callback
+            );
         },
-        function (callback) {
-                projectCreate("project 2", "owner 2", "description for 2", "1968-07-27", 234000, "http://google.com", ["commercial", "shop"], callback);
-        },
-        function (callback) {
-                projectCreate("project 3", "owner 2", "description for 3", "1998-05-27", 234000, "http://google.com", ["residential", "bunglow"], callback);
-        },
-        function (callback) {
-                projectCreate("project 4", "owner 3", "description for 4", "1999-07-29", 234000, "http://google.com", ["residential", "farmhouse"], callback);
-        },
-        function (callback) {
-                projectCreate("project 5", "owner 4", "description for 5", "1990-07-24", 234000, "http://google.com", ["residential", "apartment"], callback);
-        }
-        ],
-        // optional callback
-        cb);
-}
 
+        function (callback) {
+            projectCreate(
+                "project 2",
+                "owner 2",
+                "description for 2",
+                "1968-07-27",
+                234000,
+                "http://google.com",
+                ["/catalog/project/5b1e9fe9912168318f98c206.jpeg"],
+                ["commercial", "shop"],
+                callback
+            );
+        },
+
+        function (callback) {
+            projectCreate(
+                "project 3",
+                "owner 2",
+                "description for 3",
+                "1998-05-27",
+                234000,
+                "http://google.com",
+                ["/catalog/project/5b1ea3b1883e8e3580a6ae3f.jpeg"],
+                ["residential", "bunglow"],
+                callback
+            );
+        },
+
+        function (callback) {
+            projectCreate(
+                "project 4",
+                "owner 3",
+                "description for 4",
+                "1999-07-29",
+                234000,
+                "http://google.com",
+                ["/catalog/project/5b1e9e4229b4652d91a7cd78.png"],
+                ["residential", "farmhouse"],
+                callback
+            );
+        },
+
+        function (callback) {
+            projectCreate(
+                "project 5",
+                "owner 4",
+                "description for 5",
+                "1990-07-24",
+                234000,
+                "http://google.com",
+                ["/catalog/project/5b1a2ce0fb941626fabe5df8.jpeg"],
+                ["residential", "apartment"],
+                callback
+            );
+        }
+    ],
+    cb);
+}
 
 function createenquiries(cb) {
     async.parallel([
